@@ -8,6 +8,7 @@ class Person
   connection  :mother
   connection  :father
   connections :children
+  connection  :spouse
 
   def initialize args={}
     @name    = args.fetch(:name)

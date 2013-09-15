@@ -10,11 +10,17 @@ describe "Family Example" do
     @rudi   = Person.new name: "Rudi"
     @andi   = Person.new name: "Andi"
 
+    Connector.one_to_one @grete, @rudolf, as: :spouse, of: :spouse
+
     # Prokops
     @gerda  = Person.new name: "Gerda"
     @helmut = Person.new name: "Helmut"
     @heidi  = Person.new name: "Heidi"
     @elke   = Person.new name: "Elke"
+
+    Connector.one_to_one @gerda, @helmut, as: :spouse, of: :spouse
+
+    Connector.one_to_one @andi, @heidi, as: :spouse, of: :spouse
 
     # Grandchildren
     @jan   = Person.new name: "Jan"
@@ -58,6 +64,11 @@ describe "Family Example" do
   let(:michi) { @michi }
 
 
+  it "Rudolf and Grete are spouses" do
+    expect( rudolf.spouse ).to eq(grete)
+    expect( grete.spouse ).to eq(rudolf)
+  end
+
   it "Rudolf's and Grete's children are Rudi and Andi"  do
     expect( grete.children ).to eq( [rudi, andi] )
     expect( rudolf.children ).to eq([rudi,andi])
@@ -73,6 +84,10 @@ describe "Family Example" do
     expect( andi.mother ).to eq( grete )
   end
 
+  it "Gerda and Helmut are spouses" do
+    expect( helmut.spouse ).to eq(gerda)
+    expect( gerda.spouse ).to eq(helmut)
+  end
 
   it "Gerda's and Helmut's children are Elke and Heidi" do
     expect( helmut.children ).to eq([elke,heidi])
@@ -87,6 +102,11 @@ describe "Family Example" do
   it "Elkes's parents are Gerda and Helmut" do
     expect( elke.mother ).to eq(gerda)
     expect( elke.father).to eq(helmut)
+  end
+
+  it "Heidi and Andi are spouses" do
+    expect( heidi.spouse ).to eq(andi)
+    expect( andi.spouse ).to eq(heidi)
   end
 
   it "Heidi's and Andi's children are Julian and Tina" do

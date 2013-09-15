@@ -5,25 +5,33 @@ module Conjects
   # Base class of all connectors
   class Connector
 
-    # Initialize a OneToMany-connector
+    # Initialize and connect using a OneToManyConnector
     # @param [Object] left
     # @param [Object] right
-    # @param [Hash] options
-    # @option options as: [Symbol] argument-name to be assigned in right object
-    # @option options of: [Symbol] argument-name to be added to on left object
+    # @option *options [Symbol] :as argument-name to be assigned in right object
+    # @option *options [Symbol] :of array to be added to on left object
     def self.one_to_many left, right, *options
       OneToManyConnector.new left, right, *options
     end
 
-    # Initialize a OneToMany-connector
+    # Initialize and connect using a ManyToManyConnector
     # @param [Object] left
     # @param [Object] right
-    # @param [Hash] options
-    # @option options to: [Symbol] argument-name to be added to on left object
-    # @option options of: [Symbol] argument-name to be added to on right object
+    # @option *options [Symbol] :to array to be appended to on the left object
+    # @option *options [Symbol] :of array to be appended to on the right object
     def self.many_to_many left, right, *options
       ManyToManyConnector.new left, right, *options
     end
+
+    # Initialize and connect using a OneToOneConnector
+    # @param [Object] left
+    # @param [Object] right
+    # @option *options [Symbol] :as value to be set on left object.
+    # @option *options [Symbol] :of value to be set on right object.
+    def self.one_to_one left, right, *options
+      OneToOneConnector.new left, right, *options
+    end
+
 
     def initialize left, right, *options
       @left = left
@@ -32,7 +40,9 @@ module Conjects
     end
 
     # Connect left and right as defined in options
-    # @param [Hash] options - see [one_to_many] and [many_to_many]
+    # @param [Hash] options
+    # @see one_to_many
+    # @see many_to_many
     def connect options
       left_opts = options.shift
       right_opts= options.shift
@@ -46,9 +56,10 @@ module Conjects
   # The One-To-Many Connector
   class OneToManyConnector < Connector
 
-    # Add right to left or left to right as defined in options.
-    # Where one side is a single value and the other side is an Array
-    # see [one_to_many]
+    # Assign left to right's attribute. And add right to left's array.
+    # @param [Object] left
+    # @param [Object] right
+    # @see many_to_many Connector for a list of possible options
     def add_connection left, right, options
       case options[0]
       when :as
@@ -63,18 +74,36 @@ module Conjects
   # The Many-To-Many Connector
   class ManyToManyConnector < Connector
 
-    # Add right to left or left to right as defined in options.
-    # Where we have Arrays on both sides
-    # see [many_to_many]
-    def add_connection source, target, options
+    # Add right to left's array and left to right's array.
+    # @param [Object] left
+    # @param [Object] right
+    # @see many_to_many Connector for a list of possible options
+    def add_connection left, right, options
       case options[0]
       when :to
-        source.add options[1], target
+        left.add options[1], right
       when :of
-        target.add options[1], source
+        right.add options[1], left
       end
     end
 
+  end
+
+  # The OneToOne Connector
+  class OneToOneConnector < Connector
+
+    # Set value on left object to right and value of right object to left
+    # @param [Object] left
+    # @param [Object] right
+    # @see one_to_one Connector for a list of possible options
+    def add_connection left, right, options
+      case options[0]
+      when :as
+        left.link options[1], right
+      when :of
+        right.link options[1], left
+      end
+    end
   end
 
 end
