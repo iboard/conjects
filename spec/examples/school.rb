@@ -1,5 +1,4 @@
 require "conjects"
-require "securerandom"
 
 class Teacher < Person
   connections :classes

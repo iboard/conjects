@@ -1,5 +1,4 @@
 require "conjects"
-require "securerandom"
 
 class Person
   include Conjects::Arguments
