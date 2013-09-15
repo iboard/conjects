@@ -2,7 +2,11 @@
 
 module Conjects
 
-  # Base class of all connectors
+  # Base class of all connectors.
+  #
+  # When you derive your own class from _Connector_, implement the method `add_connection` as
+  # shown in the derived classes implemented here. This `add_connection` will be called twice.
+  # One time for the left, one time for the right object of the connection.
   class Connector
 
     # Initialize and connect using a OneToManyConnector
@@ -32,15 +36,15 @@ module Conjects
       OneToOneConnector.new left, right, *options
     end
 
-
     def initialize left, right, *options
       @left = left
       @right= right
       connect *options
     end
 
-    # Connect left and right as defined in options
+    # Connect left and right as defined in options.
     # @param [Hash] options
+    # @see one_to_one
     # @see one_to_many
     # @see many_to_many
     def connect options
