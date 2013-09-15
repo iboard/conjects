@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-See `spec/examples` to figure out how you can use this gem.
+See `spec/examples` and `spec/integration` to figure out how you can use this gem.
 
 ## TDD
 
